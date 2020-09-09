@@ -28,24 +28,12 @@ try {
     console.log('Error:', e.stack)
 }
 
-var count = 0
-T.post('statuses/update', { status: quotes[count] }, function(err, data, response) {
+var quote = quotes[Math.floor(Math.random()*quotes.length)]
+console.log("loop start")
+T.post('statuses/update', { status: quote }, function(err, data, response) {
     console.log("avalovara quote tweeted successfuly at: " + data.created_at)
     console.log(data.text)
 })
-count += 1
-var intervalID = setInterval(() => {
-    console.log("loop start")
-    T.post('statuses/update', { status: quotes[count] }, function(err, data, response) {
-        console.log("avalovara quote tweeted successfuly at: " + data.created_at)
-        console.log(data.text)
-    })
-    if (count == quotes.length -1){
-        clearInterval(intervalID)
-    } else {
-        count += 1
-    }
-}, 3600000);
 
 //follow twitter account and retweet when the tweet involves some specific word
 // var users = ["721774492620582912"];
