@@ -1,8 +1,7 @@
 var Twit = require('twit')
 var EnvVar = require('dotenv')
 EnvVar.config();
-
-
+const fs = require('fs');
 
 var T = new Twit({
     consumer_key: process.env.CONSUMER_KEY,
@@ -12,14 +11,36 @@ var T = new Twit({
 })
 
 //post tweets periodicaly
-var test = 'o salto do peixe do avalovara'.split(" ")
-var test = ""
+try {
+    var data = fs.readFileSync('source.txt', 'utf8')
+    var quotes = data.split(/\r\n|\r|\n/)
+    var remove = []
+    for (var i in quotes){
+        if (quotes[i] === ""){
+            remove.push(i)
+        }
+    }
+    for (var i = remove.length-1; i > -1; i--){
+        quotes.splice(remove[i],1)
+    }
+    console.log("Got " + quotes.length + " quotes sucessfully and will start tweeting periodicaly")
+} catch(e) {
+    console.log('Error:', e.stack)
+}
+
 var count = 0
+T.post('statuses/update', { status: quotes[count] }, function(err, data, response) {
+    console.log("avalovara quote tweeted successfuly at: " + data.created_at)
+    console.log(data.text)
+})
+count += 1
 var intervalID = setInterval(() => {
-    T.post('statuses/update', { status: test[count] }, function(err, data, response) {
-        console.log(data)
+    console.log("loop start")
+    T.post('statuses/update', { status: quotes[count] }, function(err, data, response) {
+        console.log("avalovara quote tweeted successfuly at: " + data.created_at)
+        console.log(data.text)
     })
-    if (count == test.length -1){
+    if (count == quotes.length -1){
         clearInterval(intervalID)
     } else {
         count += 1
