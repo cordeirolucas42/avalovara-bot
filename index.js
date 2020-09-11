@@ -12,7 +12,7 @@ var T = new Twit({
 
 //post tweets periodicaly
 try {
-    var data = fs.readFileSync('source.txt', 'utf8')
+    var data = fs.readFileSync('source2.txt', 'utf8')
     var quotes = data.split(/\r\n|\r|\n/)
     var remove = []
     for (var i in quotes){
@@ -29,7 +29,7 @@ try {
 }
 
 var quote = quotes[Math.floor(Math.random()*quotes.length)]
-console.log("loop start")
+// console.log("loop start")
 T.post('statuses/update', { status: quote }, function(err, data, response) {
     console.log("avalovara quote tweeted successfuly at: " + data.created_at)
     console.log(data.text)
